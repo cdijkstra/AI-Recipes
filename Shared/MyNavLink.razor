@@ -1,0 +1,11 @@
+<NavLink class="bg-lime-900 text-white py-2 px-4 rounded transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active::bg-green-700 hover:bg-green-700" href="@Href">
+    <span class="oi oi-plus" aria-hidden="true"></span> @Text
+</NavLink>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+    
+    [Parameter]
+    public string Href { get; set; }
+}

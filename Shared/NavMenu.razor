@@ -1,0 +1,27 @@
+﻿<div class="flex flex-row nav-scrollable">
+    <div class="top-row ps-3 navbar navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-2xl" href="">🍛AI recipes🍛</a>
+            <button title="Navigation menu" class="navbar-toggler">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+        
+    <nav class="flex flex-row flex-auto">
+        <div class="nav-item px-3">
+            <NavLink class="bg-lime-900 text-white py-2 px-4 rounded transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active::bg-green-700 hover:bg-green-700" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+             <MyNavLink text="Suggestions" href="suggestions"/>
+        </div>
+        <div class="nav-item px-3">
+            <MyNavLink text="Counter" href="counter"/>
+        </div>
+        <div class="nav-item px-3">
+            <MyNavLink text="Fetch datas" href="fetchdata"/>
+        </div>
+    </nav>
+</div>
