@@ -1,22 +1,15 @@
 <a href="#" class="block rounded-lg p-4 shadow-sm shadow-indigo-100">
   <img
     alt="Home"
-    src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+    src=@ImageUrl
     class="h-56 w-full rounded-md object-cover"
   />
 
   <div class="mt-2">
     <dl>
       <div>
-        <dt class="sr-only">Price</dt>
-
-        <dd class="text-sm text-gray-500">$240,000</dd>
-      </div>
-
-      <div>
-        <dt class="sr-only">Address</dt>
-
-        <dd class="font-medium">123 Wallaby Avenue, Park Road</dd>
+        <dt class="sr-only">Recipe</dt>
+        <dd class="font-medium">@Title</dd>
       </div>
     </dl>
 
@@ -29,7 +22,7 @@
         <div class="mt-1.5 sm:mt-0">
           <p class="text-gray-500">Difficulty</p>
 
-          <p class="font-medium">Easy</p>
+          <p class="font-medium">@Difficulty</p>
         </div>
       </div>
 
@@ -43,7 +36,7 @@
         <div class="mt-1.5 sm:mt-0">
           <p class="text-gray-500">Ingredients</p>
 
-          <p class="font-medium">5</p>
+          <p class="font-medium">@Ingredients.ToString()</p>
         </div>
       </div>
 
@@ -57,7 +50,7 @@
         <div class="mt-1.5 sm:mt-0">
           <p class="text-gray-500">Duration</p>
 
-          <p class="font-medium">45min</p>
+          <p class="font-medium">@(Duration)mins</p>
         </div>
       </div>
     </div>
@@ -65,5 +58,23 @@
 </a>
 
 @code {
+  [Parameter]
+  public string Title { get; set; }
     
+  [Parameter]
+  public string ImageUrl { get; set; }
+    
+  [Parameter]
+  public string Difficulty { get; set; }
+    
+  [Parameter]
+  public int Ingredients { get; set; }
+    
+  [Parameter]
+  public string Duration { get; set; }
+
+  public void Test()
+  {
+    
+  }
 }
