@@ -1,0 +1,205 @@
+@page "/Ingredients"
+@using ai_recipes_blazor.Data.Ingredients
+
+<h2>Ingredient Finder</h2>
+
+<div>
+    <label>
+        <input @onchange="(e) => OnFilterChange(nameof(IsVegetarianSelected), e)" type="checkbox" /> Vegetarian
+    </label>
+    <label>
+        <input @onchange="(e) => OnFilterChange(nameof(IsVeganSelected), e)" type="checkbox" /> Vegan
+    </label>
+    <label>
+        <input @onchange="(e) => OnFilterChange(nameof(IsGlutenFreeSelected), e)" type="checkbox" /> Gluten-Free
+    </label>
+</div>
+
+<div>
+    <input @oninput="OnIngredientInput"
+           value="@SearchTerm" 
+           placeholder="Type an ingredient..."
+           class="form-control"/>
+    
+    @if (Suggestions.Any())
+    {
+        <ul class="mt-2 space-y-2">
+            @foreach (var suggestion in Suggestions)
+            {
+                <li 
+                    @onclick="() => AddIngredient(suggestion)" 
+                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
+                >
+                    @suggestion
+                </li>
+            }
+            @if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                <li 
+                    @onclick="() => AddIngredient(SearchTerm)" 
+                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
+                >
+                    Add @SearchTerm
+                </li>
+            }
+        </ul>
+    }
+    else if (!string.IsNullOrWhiteSpace(SearchTerm))
+    {
+        <li 
+            @onclick="() => AddIngredient(SearchTerm)" 
+            class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
+        >
+            Add @SearchTerm
+        </li>
+    }
+</div>
+
+<div>
+    <h3 class="text-lg">Your Ingredients (max 8):</h3>
+    <ul>
+        @foreach (var ingredient in UserIngredients.Where(ing => !CommonIngredientsData.Ingredients.Keys.Contains(ing)))
+        {
+            <li class="flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm hover:bg-gray-200">
+                <span class="text-gray-800">@ingredient</span>
+                <button 
+                    @onclick="() => RemoveIngredient(ingredient)" 
+                    class="bg-red-500 text-blue px-4 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300">
+                    Remove
+                </button>
+            </li>
+        }
+    </ul>
+</div>
+
+<div>
+    <h3 class="text-lg">
+        Presumed based ingredients
+        <span class="relative group">
+            <span class="text-blue-500 cursor-pointer">❓</span>
+            <span 
+                class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute top-1/2 left-full transform -translate-y-1/2 ml-2 w-52 bg-gray-800 text-white text-sm text-left rounded-md px-3 py-2 transition-opacity duration-300">
+                You can opt out the ones that are not applicable
+            </span>
+        </span>
+    </h3>
+    
+    <!-- Button to toggle visibility -->
+    <button 
+        @onclick="ToggleListVisibility" 
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+        Toggle Ingredients
+    </button>
+    
+    <!-- Conditionally show the ingredients list -->
+    @if (areCommonIngredientsVisible)
+    {
+        <ul>
+            @foreach (var ingredient in UserIngredients.Where(ing => CommonIngredientsData.Ingredients.Keys.Contains(ing)))
+            {
+                <li class="flex items-center justify-between bg-gray-100 p-2 rounded-lg shadow-sm hover:bg-gray-200">
+                    <span class="text-gray-800">@ingredient</span>
+                    <button
+                        @onclick="() => RemoveIngredient(ingredient)"
+                        class="bg-red-500 text-blue px-4 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300">
+                        Remove
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private string SearchTerm = string.Empty;
+    private List<string> Suggestions = new();
+    
+    private List<string> UserIngredients = new(CommonIngredientsData.Ingredients.Keys); // Creates a copy
+
+    private bool areCommonIngredientsVisible = false;  // Initially hidden
+    private bool IsVegetarianSelected = false;
+    private bool IsVeganSelected = false;
+    private bool IsGlutenFreeSelected = false;
+    
+    private void ToggleListVisibility()
+    {
+        areCommonIngredientsVisible = !areCommonIngredientsVisible;
+    }
+    
+    private void AddIngredient(string searchTerm)
+    {
+        UserIngredients.Add(searchTerm);
+    }
+
+    private void RemoveIngredient(string ingredient)
+    {
+        UserIngredients.Remove(ingredient);
+    }
+
+    private void OnIngredientInput(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value?.ToString() ?? string.Empty;
+        OnSearchTermChanged();
+    }
+    
+    private void OnFilterChange(string propertyName, ChangeEventArgs e)
+    {
+        switch (propertyName)
+        {
+            case nameof(IsVegetarianSelected):
+                IsVegetarianSelected = (bool)e.Value;
+                break;
+            case nameof(IsVeganSelected):
+                IsVeganSelected = (bool)e.Value;
+                break;
+            case nameof(IsGlutenFreeSelected):
+                IsGlutenFreeSelected = (bool)e.Value;
+                break;
+            default:
+                return;
+        }
+
+        FilterIngredients();
+    }
+
+    private void OnSearchTermChanged()
+    {
+        if (string.IsNullOrWhiteSpace(SearchTerm))
+        {
+            Suggestions.Clear();
+        }
+        else
+        {
+            Suggestions = IngredientSuggestions.Suggestions
+                .Where(i => i.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+                .Take(4) // Limit the number of suggestions
+                .ToList();
+        }
+    }
+
+    private void FilterIngredients()
+    {
+        var selectedCategories = new List<IngredientCategory>();
+
+        if (IsVegetarianSelected)
+            selectedCategories.Add(IngredientCategory.Vegetarian);
+        if (IsVeganSelected)
+            selectedCategories.Add(IngredientCategory.Vegan);
+        if (IsGlutenFreeSelected)
+            selectedCategories.Add(IngredientCategory.GlutenFree);
+
+        if (!(IsVegetarianSelected || IsVeganSelected || IsGlutenFreeSelected))
+        {
+            return;
+        }
+        
+        // Filter ingredients based on the selected categories
+        var filteredIngredients = UserIngredients
+            .Where(ingredient => selectedCategories.Any(cat => CommonIngredientsData.Ingredients[ingredient].Contains(cat)))
+            .ToList();
+
+        // Now `filteredIngredients` will only contain the ingredients that match the selected categories
+        UserIngredients = filteredIngredients; // Update the list
+    }
+    
+}

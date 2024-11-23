@@ -1,128 +1,106 @@
 ﻿@page "/suggestions"
+@using System.Net.Http.Headers
+@using ai_recipes_blazor.Data.DTOs
+@using Newtonsoft.Json
 
-<PageTitle>Awesome suggestions</PageTitle>
+<h3>Awesome suggestions</h3>
 
 <div class="grid grid-cols-3 gap-4">
-    @for (int i = 0; i < 9; i++)
+    @foreach (var suggestionData in suggestionsData)
     {
-        if (i == 2)
-        {
             <div class="p-4 border border-gray-200 rounded">
                 <Suggestion
-                    Title="Indian Chicken with Parsley"
-                    ImageUrl=await @ObtainImageUrl();
-                    Difficulty="Easy"
-                    Ingredients="5"
-                    Duration="45"
-                />
+                    Title=@suggestionData.Title
+                    Difficulty=@suggestionData.Difficulty
+                    Duration=@suggestionData.Duration
+                    ImageUrl=@suggestionData.ImageUrl
+                    Ingredients=@suggestionData.Ingredients
+                    ></Suggestion>
             </div>
-        }
-        else
-        {
-            <div class="p-4 border border-gray-200 rounded">
-                <Suggestion
-                    Title="Thai curry with lemongress"
-                    ImageUrl="https://assets.bonappetit.com/photos/57af631553e63daf11a4e51e/1:1/w_2240,c_limit/lemongrass-cocnnut-curry-summer-vegetables-646.jpg"
-                    Difficulty="Medium"
-                    Ingredients="7"
-                    Duration="35"
-                />
-            </div>
-        }
     }
 </div>
 
-@* @code { *@
-@*     public async Task<string> ObtainImageUrl() *@
-@*     { *@
-@*         string token = Environment.GetEnvironmentVariable("OPENAI_API_KEY"); *@
-@*         string apiUrl = "https://api.openai.com/v1/images/generations"; *@
-@* *@
-@*         // Set the request data *@
-@*         var requestData = new *@
-@*         { *@
-@*             prompt = "A cute baby sea otter", *@
-@*             n = 2, *@
-@*             size = "1024x1024" *@
-@*         }; *@
-@* *@
-@*         // Create an HttpClient *@
-@*         using (HttpClient httpClient = new HttpClient()) *@
-@*         { *@
-@*         // Add the API key to the request headers *@
-@*             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}"); *@
-@* *@
-@*         // Set the content type *@
-@*             httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json"); *@
-@* *@
-@*         // Serialize the request data to JSON *@
-@*             var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(requestData)); *@
-@* *@
-@*         // Make the POST request *@
-@*             HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content); *@
-@* *@
-@*         // Check if the request was successful *@
-@*             if (response.IsSuccessStatusCode) *@
-@*             { *@
-@*                 string responseContent = await response.Content.ReadAsStringAsync(); *@
-@*                 Console.WriteLine(responseContent); *@
-@*                 return responseContent; *@
-@*             } *@
-@* *@
-@*             Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}"); *@
-@*             return ""; *@
-@*         } *@
-@*     } *@
-@* } *@
-@* *@
-@* @code { *@
-@*     private List<SuggestionData> suggestionsData = new List<SuggestionData>(); *@
-@* *@
-@*     protected override async Task OnInitializedAsync() *@
-@*     { *@
-@*         // Fetch data for multiple suggestions concurrently *@
-@*         var tasks = Enumerable.Range(0, 10) // Replace with the number of suggestions you want *@
-@*             .Select(_ => FetchSuggestionData()) *@
-@*             .ToArray(); *@
-@* *@
-@*         var fetchedData = await Task.WhenAll(tasks); *@
-@*         suggestionsData.AddRange(fetchedData); *@
-@*     } *@
-@* *@
-@*     private async Task<SuggestionData> FetchSuggestionData() *@
-@*     { *@
-@*         // Make API calls and retrieve data for a single suggestion *@
-@*         // Example: *@
-@*         string title = await YourTitleApiCall(); *@
-@*         string imageUrl = await YourImageUrlApiCall(); *@
-@*         string difficulty = await YourDifficultyApiCall(); *@
-@*         string ingredients = await YourIngredientsApiCall(); *@
-@*         string duration = await YourDurationApiCall(); *@
-@* *@
-@*         return new SuggestionData *@
-@*         { *@
-@*             Title = title, *@
-@*             ImageUrl = imageUrl, *@
-@*             Difficulty = difficulty, *@
-@*             Ingredients = ingredients, *@
-@*             Duration = duration *@
-@*         }; *@
-@*     } *@
-@* *@
-@*     // Define methods for your API calls *@
-@*     private async Task<string> YourTitleApiCall() { /* ... */ } *@
-@*     private async Task<string> YourImageUrlApiCall() { /* ... */ } *@
-@*     private async Task<string> YourDifficultyApiCall() { /* ... */ } *@
-@*     private async Task<string> YourIngredientsApiCall() { /* ... */ } *@
-@*     private async Task<string> YourDurationApiCall() { /* ... */ } *@
-@* *@
-@*     // Define a data structure to hold suggestion data *@
-@*     public class SuggestionData *@
-@*     { *@
-@*         public string Title { get; set; } *@
-@*         public string ImageUrl { get; set; } *@
-@*         public string Difficulty { get; set; } *@
-@*         public string Ingredients { get; set; } *@
-@*         public string Duration { get; set; } *@
-@*     } *@
-@* } *@
+@code {
+    private List<SuggestionData> suggestionsData = new List<SuggestionData>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch data for multiple suggestions concurrently
+        var tasks = Enumerable.Range(0, 2) // Replace with the number of suggestions you want
+            .Select(_ => FetchSuggestionData())
+            .ToArray();
+
+        var fetchedData = await Task.WhenAll(tasks);
+        suggestionsData.AddRange(fetchedData);
+    }
+
+    private async Task<SuggestionData> FetchSuggestionData()
+    {
+        // Make API calls and retrieve data for a single suggestion
+        // Example:
+        
+        // string title = await YourTitleApiCall();
+        string imageUrl = await ObtainImageUrl();
+        // string difficulty = await YourDifficultyApiCall();
+        // string ingredients = await YourIngredientsApiCall();
+        // string duration = await YourDurationApiCall();
+
+        return new SuggestionData
+        {
+            Title = "title",
+            ImageUrl = imageUrl,
+            Difficulty = "difficulty",
+            Ingredients = new Random().Next(1,6),
+            Duration = "duration"
+        };
+    }
+
+    // Define methods for your API calls
+    
+    // Define a data structure to hold suggestion data
+    public class SuggestionData
+    {
+        public string Title { get; set; }
+        public string ImageUrl { get; set; }
+        public string Difficulty { get; set; }
+        public int Ingredients { get; set; }
+        public string Duration { get; set; }
+    }
+    
+    public async Task<string> ObtainImageUrl()
+    {
+        string token = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        string apiUrl = "https://api.openai.com/v1/images/generations";
+
+        // Set the request data
+        var requestData = new
+        {
+            prompt = "A western style Thai green curry with chili powder",
+            n = 1,
+            size = "1024x1024"
+        };
+
+        // Create an HttpClient
+        using HttpClient httpClient = new HttpClient();
+        // Add the API key to the request headers
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+        // Serialize the request data to JSON
+        var content = new StringContent(JsonConvert.SerializeObject(requestData));
+        // Set the content type
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        // Make the POST request
+        HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
+
+        // Check if the request was successful
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+            return "";
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        ImageResponse imageResponse = JsonConvert.DeserializeObject<ImageResponse>(responseContent);
+        return imageResponse.data[0].url;
+    }
+}
