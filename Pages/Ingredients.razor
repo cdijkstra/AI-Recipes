@@ -4,41 +4,41 @@
 <h2>Ingredient Finder</h2>
 
 <div>
-    <label>
-        <input @onchange="(e) => OnFilterChange(nameof(IsVegetarianSelected), e)" type="checkbox" /> Vegetarian
-    </label>
-    <label>
-        <input @onchange="(e) => OnFilterChange(nameof(IsVeganSelected), e)" type="checkbox" /> Vegan
-    </label>
-    <label>
-        <input @onchange="(e) => OnFilterChange(nameof(IsGlutenFreeSelected), e)" type="checkbox" /> Gluten-Free
-    </label>
+    <h2>Food filters</h2>
+    @foreach (var category in Enum.GetValues<IngredientCategory>())
+    {
+        <label>
+            <input type="checkbox"
+                   @onchange="(e) => OnFilterChange(category, e)"/>
+            @category.ToString()
+        </label><br/>
+    }
 </div>
 
 <div>
+    <h1>Type your ingredrients below</h1>
     <input @oninput="OnIngredientInput"
-           value="@SearchTerm" 
+           value="@SearchTerm"
            placeholder="Type an ingredient..."
            class="form-control"/>
-    
+
     @if (Suggestions.Any())
     {
         <ul class="mt-2 space-y-2">
             @foreach (var suggestion in Suggestions)
             {
-                <li 
-                    @onclick="() => AddIngredient(suggestion)" 
-                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
-                >
+                <li
+                    @onclick="() => AddIngredient(suggestion)"
+                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm">
                     @suggestion
                 </li>
+
             }
             @if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                <li 
-                    @onclick="() => AddIngredient(SearchTerm)" 
-                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
-                >
+                <li
+                    @onclick="() => AddIngredient(SearchTerm)"
+                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm">
                     Add @SearchTerm
                 </li>
             }
@@ -46,10 +46,9 @@
     }
     else if (!string.IsNullOrWhiteSpace(SearchTerm))
     {
-        <li 
-            @onclick="() => AddIngredient(SearchTerm)" 
-            class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm"
-        >
+        <li
+            @onclick="() => AddIngredient(SearchTerm)"
+            class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm">
             Add @SearchTerm
         </li>
     }
@@ -78,7 +77,7 @@
         <span class="relative group">
             <span class="text-blue-500 cursor-pointer">❓</span>
             <span 
-                class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute top-1/2 left-full transform -translate-y-1/2 ml-2 w-52 bg-gray-800 text-white text-sm text-left rounded-md px-3 py-2 transition-opacity duration-300">
+                class="group-hover:bg-blue-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute top-1/2 left-full transform -translate-y-1/2 ml-2 w-52 bg-gray-800 text-white text-sm text-left rounded-md px-3 py-2 transition-opacity duration-300">
                 You can opt out the ones that are not applicable
             </span>
         </span>
@@ -87,7 +86,7 @@
     <!-- Button to toggle visibility -->
     <button 
         @onclick="ToggleListVisibility" 
-        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
+        class="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300">
         Toggle Ingredients
     </button>
     
@@ -115,20 +114,25 @@
     private List<string> Suggestions = new();
     
     private List<string> UserIngredients = new(CommonIngredientsData.Ingredients.Keys); // Creates a copy
+    private List<string> AllowSuggestions = new(IngredientSuggestions.Suggestions.Keys); // Creates a copy
 
     private bool areCommonIngredientsVisible = false;  // Initially hidden
-    private bool IsVegetarianSelected = false;
-    private bool IsVeganSelected = false;
-    private bool IsGlutenFreeSelected = false;
+    // private bool IsVegetarianSelected = false, IsVeganSelected = false, IsGlutenFreeSelected = false;
+    private Dictionary<IngredientCategory, bool> ingredientFiltersApplied = new()
+    {
+        { IngredientCategory.Vegetarian, false },
+        { IngredientCategory.Vegan, false },
+        { IngredientCategory.GlutenFree, false }
+    };
     
     private void ToggleListVisibility()
     {
         areCommonIngredientsVisible = !areCommonIngredientsVisible;
     }
     
-    private void AddIngredient(string searchTerm)
+    private void AddIngredient(string ingredient)
     {
-        UserIngredients.Add(searchTerm);
+        UserIngredients.Add(ingredient);
     }
 
     private void RemoveIngredient(string ingredient)
@@ -142,23 +146,9 @@
         OnSearchTermChanged();
     }
     
-    private void OnFilterChange(string propertyName, ChangeEventArgs e)
+    private void OnFilterChange(IngredientCategory propertyName, ChangeEventArgs e)
     {
-        switch (propertyName)
-        {
-            case nameof(IsVegetarianSelected):
-                IsVegetarianSelected = (bool)e.Value;
-                break;
-            case nameof(IsVeganSelected):
-                IsVeganSelected = (bool)e.Value;
-                break;
-            case nameof(IsGlutenFreeSelected):
-                IsGlutenFreeSelected = (bool)e.Value;
-                break;
-            default:
-                return;
-        }
-
+        ingredientFiltersApplied[propertyName] = (bool)e.Value;
         FilterIngredients();
     }
 
@@ -170,7 +160,7 @@
         }
         else
         {
-            Suggestions = IngredientSuggestions.Suggestions
+            Suggestions = AllowSuggestions
                 .Where(i => i.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
                 .Take(4) // Limit the number of suggestions
                 .ToList();
@@ -179,23 +169,25 @@
 
     private void FilterIngredients()
     {
-        var selectedCategories = new List<IngredientCategory>();
-
-        if (IsVegetarianSelected)
-            selectedCategories.Add(IngredientCategory.Vegetarian);
-        if (IsVeganSelected)
-            selectedCategories.Add(IngredientCategory.Vegan);
-        if (IsGlutenFreeSelected)
-            selectedCategories.Add(IngredientCategory.GlutenFree);
-
-        if (!(IsVegetarianSelected || IsVeganSelected || IsGlutenFreeSelected))
+        var selectedCategories = ingredientFiltersApplied.Where(cat => cat.Value).Select(x => x.Key).ToList();
+        
+        if (!selectedCategories.Any())
         {
+            UserIngredients = new(CommonIngredientsData.Ingredients.Keys);
+            AllowSuggestions = new(IngredientSuggestions.Suggestions.Keys);
             return;
         }
         
+        var allowSuggestions = IngredientSuggestions.Suggestions
+            .Where(sug => selectedCategories
+                .Any(cat => sug.Value.Contains(cat)))
+            .Select(x => x.Key)
+            .ToList();
+        AllowSuggestions = allowSuggestions;
+        
         // Filter ingredients based on the selected categories
         var filteredIngredients = UserIngredients
-            .Where(ingredient => selectedCategories.Any(cat => CommonIngredientsData.Ingredients[ingredient].Contains(cat)))
+            .Where(ingredient => selectedCategories.All(cat => CommonIngredientsData.Ingredients[ingredient].Contains(cat)))
             .ToList();
 
         // Now `filteredIngredients` will only contain the ingredients that match the selected categories
