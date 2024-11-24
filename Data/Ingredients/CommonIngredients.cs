@@ -9,7 +9,6 @@ public static class CommonIngredientsData
         { "sugar", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "garlic", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "onion", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "ginger", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "butter", new List<IngredientCategory>() { IngredientCategory.Vegetarian } }, // Butter is not gluten-free
         { "oil", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "vinegar", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },

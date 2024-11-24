@@ -149,33 +149,20 @@ public static class IngredientSuggestions
         
         // Other Essentials
         { "noodles", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless labeled)
+        { "pasta", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless labeled)
         { "spaghetti", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless labeled)
         { "lasagna sheets", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless labeled)
         { "udon", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free
         { "soba", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless buckwheat)
         { "vermicelli", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (depends on type)
         { "pho noodles", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (unless labeled)
-        { "panko breadcrumbs", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free
-        { "cornmeal", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "polenta", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "tapioca", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "cornstarch", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "gelatin", new List<IngredientCategory>() { IngredientCategory.Vegetarian } }, // Not vegan, but gluten-free
-        
-        // Sweeteners
-        { "brown sugar", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "powdered sugar", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "molasses", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "maple syrup", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "agave syrup", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "palm sugar", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        
+
         // Miscellaneous
         { "seaweed", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "kimchi", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian } }, // Not gluten-free (depending on preparation)
         { "pickles", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "capers", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "anchovies", new List<IngredientCategory>() { IngredientCategory.Vegetarian } }, // Not vegan or gluten-free
+        { "anchovies", new List<IngredientCategory>() { IngredientCategory.GlutenFree } },
         { "sesame seeds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "almonds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "cashews", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
@@ -184,6 +171,8 @@ public static class IngredientSuggestions
         { "pistachios", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "chia seeds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
         { "flaxseeds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
-        { "poppy seeds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } }
+        { "poppy seeds", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
+        { "coconut milk", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
+        { "ginger", new List<IngredientCategory>() { IngredientCategory.Vegan, IngredientCategory.Vegetarian, IngredientCategory.GlutenFree } },
     };
 }

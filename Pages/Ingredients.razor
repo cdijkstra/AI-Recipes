@@ -1,26 +1,27 @@
 @page "/Ingredients"
 @using ai_recipes_blazor.Data.Ingredients
 
-<h2>Ingredient Finder</h2>
-
 <div>
     <h2>Food filters</h2>
+    <div class="flex flex-wrap gap-4">
     @foreach (var category in Enum.GetValues<IngredientCategory>())
     {
         <label>
             <input type="checkbox"
-                   @onchange="(e) => OnFilterChange(category, e)"/>
-            @category.ToString()
+                   @onchange="(e) => OnFilterChange(category, e)"
+                   class="appearance-none w-5 h-5 bg-gray-200 checked:bg-teal-500 checked:border-teal-500 rounded shadow-sm border border-gray-300 transition duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400"/>
+            <span class="text-gray-700">@category.ToString()</span>
         </label><br/>
     }
+    </div>
 </div>
 
 <div>
-    <h1>Type your ingredrients below</h1>
+    <h3 class="text-lg">Type your ingredrients below</h3>
     <input @oninput="OnIngredientInput"
            value="@SearchTerm"
            placeholder="Type an ingredient..."
-           class="form-control"/>
+           class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 placeholder-gray-400 transition duration-200"/>
 
     @if (Suggestions.Any())
     {
@@ -38,7 +39,7 @@
             {
                 <li
                     @onclick="() => AddIngredient(SearchTerm)"
-                    class="bg-green-100 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm">
+                    class="bg-teal-500 text-green-800 p-3 rounded-lg cursor-pointer transition-transform duration-200 transform hover:scale-105 hover:ring-2 hover:ring-green-400 shadow-sm">
                     Add @SearchTerm
                 </li>
             }
@@ -117,13 +118,13 @@
     private List<string> AllowSuggestions = new(IngredientSuggestions.Suggestions.Keys); // Creates a copy
 
     private bool areCommonIngredientsVisible = false;  // Initially hidden
-    // private bool IsVegetarianSelected = false, IsVeganSelected = false, IsGlutenFreeSelected = false;
     private Dictionary<IngredientCategory, bool> ingredientFiltersApplied = new()
     {
         { IngredientCategory.Vegetarian, false },
         { IngredientCategory.Vegan, false },
         { IngredientCategory.GlutenFree, false }
     };
+    private readonly int MaxIngredients = 8;
     
     private void ToggleListVisibility()
     {
