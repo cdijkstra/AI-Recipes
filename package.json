@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:css": "tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/output.css\n"
+    "build:css": "tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/site.css\n"
   },
   "dependencies": {
     "tailwindcss": "^3.4.15"
